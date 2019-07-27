@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+    var zipCode = parseInt(window.prompt("Enter your Zipcode: "));
+    //Call Geocode 
+    geocode();
+    var lattitude;
+    var longitude;
+    function geocode(){
+    var location = zipCode;
+    axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
+    params:{
+    	address:location,
+    	key:'AIzaSyD5eom9V9RqI83ap7vA8NtIjV-dI-z78fU'
+    	}
+    })
+    .then(function(response){
+    console.log(response);
+ 	lattitude = response.data.results[0].geometry.location.lat;
+ 	longitude = response.data.results[0].geometry.location.lng;
+    })
+    .catch(function(error){
+    	console.log(error);
+    });
+    }
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: lattitude, lng: longitude},
+          zoom: 15
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5eom9V9RqI83ap7vA8NtIjV-dI-z78fU&callback=initMap"
+    async defer></script>
+  </body>
+</html>
